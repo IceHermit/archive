@@ -2,14 +2,15 @@ import mysql.connector as myl
 from colorama import init, Fore, Back, Style
 from tabulate import tabulate
 from termcolor import colored
+from datetime import datetime
 
 # Initialize colorama
 init(autoreset=True)
 
 # Database connection
-mydb = myl.MySQLConnection(host="localhost", user="root", passwd = "tiger", database="test")
-
+mydb = myl.MySQLConnection(host="localhost", user="root", password="2022", database="csproject")
 mycursor = mydb.cursor()
+
 
 # Create table if not exists
 cr = ("""CREATE TABLE IF NOT EXISTS customer2bz (
@@ -32,7 +33,7 @@ m = " "
 mop = 0
 print(Fore.GREEN + "WELCOME")
 
-while ch == "y" or ch == "Y":
+while ch == "y":
     print(Fore.RED + "1. REGISTER for your trip ")
     print(Fore.RED + "2. REVISIT the details to rectify")
     print(Fore.RED + "3. INVALIDATE or scrap your trip ")
@@ -69,11 +70,15 @@ while ch == "y" or ch == "Y":
                 print(Fore.WHITE + "")
                 print("ERROR FOUND! TYPE YOUR CVV NUMBER AGAIN")
                 cvv = input("enter your CVV -")
-            exp = input("enter EXPIRATION OF CREDIT CARD")
-            while len(exp) != 4:
-                print(Fore.WHITE + "")
-                print("ERROR FOUND! TYPE YOUR EXPIRATION OF CREDIT CARD AGAIN")
-                exp = input("enter EXPIRATION OF CREDIT CARD -")
+            exp = input("enter EXPIRATION OF CREDIT CARD (YYYY-MM-DD): -")
+            try:
+                exp = datetime.strptime(exp, "%Y-%m-%d")
+                current_date = datetime.now()
+                if exp<current_date:
+                    print("ERROR FOUND! type your Expiration of credit card again, the date is less than the current date.")
+                    exp = input("enter EXPIRATION OF CREDIT CARD (YYYY-MM-DD):- ")
+            except ValueError:
+                print("Invalid date format. Please enter the date in YYYY-MM-DD format.")
 
         elif mop == 2:
             m = "paytm"
@@ -99,11 +104,15 @@ while ch == "y" or ch == "Y":
             while len(cvv) != 3:
                 print("ERROR FOUND! type your cvv number again")
                 cvv = input("enter your CVV NUMBER- ")
-            exp = input("enter EXPIRATION OF DEBIT CARD -")
-            while len(exp) != 4:
-                print("ERROR FOUND! type your Expiration of debit card again")
-                exp = input("enter EXPIRATION OF DEBIT CARD- ")
-
+            exp = input("enter EXPIRATION OF DEBIT CARD (YYYY-MM-DD): -")
+            try:
+                exp = datetime.strptime(exp, "%Y-%m-%d")
+                current_date = datetime.now()
+                if exp<current_date:
+                    print("ERROR FOUND! type your Expiration of debit card again, the date is less than the current date.")
+                    exp = input("enter EXPIRATION OF DEBIT CARD (YYYY-MM-DD):- ")
+            except ValueError:
+                print("Invalid date format. Please enter the date in YYYY-MM-DD format.")
         print(Style.RESET_ALL)
         print(" CHOOSE MODE OF TRANSPORTATION- ")
         print("1. by air (money according to ticket)")
@@ -116,7 +125,7 @@ while ch == "y" or ch == "Y":
             transport = "by air"
             print("Your departing dates will be notified earliest in a week ")
         elif tr == 2:
-            print("1. car (Rs 8,000 per day)")
+            print("1. car")
             print("2. bus")
             rt = int(input("enter your choice"))
             if rt == 1:
@@ -143,8 +152,8 @@ while ch == "y" or ch == "Y":
                     print("Wrong input")
             elif rt == 2:
                 transport = "bus"
-                print("1. Mini")
-                print("2. Deluxe")
+                print("1. Mini(Rs.15000)")
+                print("2. Deluxe(Rs.20000)")
                 bus = int(input("enter your choice"))
                 if bus == 1:
                     mon = 15000
@@ -153,13 +162,12 @@ while ch == "y" or ch == "Y":
                     mon = 20000
                     transport = "by road (deluxe bus)"
 
-        tg = input("Do you need a tour guide? (Rs 8,000 per day): ")
 
         print(Fore.WHITE + "")
         print("AVAILABLE HOTELS")
-        print("1: 3 star")
-        print("2: 5 star")
-        print("3: 7 star")
+        print("1: 3 star(Rs.4000)")
+        print("2: 5 star(Rs.7000)")
+        print("3: 7 star(Rs.10000)")
         hotm = 0
         hot = 0
         while hot not in [1, 2, 3]:
@@ -193,24 +201,18 @@ while ch == "y" or ch == "Y":
         print(Fore.CYAN + "PHONE NUMBER:", ph)
         print(Fore.CYAN + "MODE OF PAYMENT:", m)
         print(Fore.CYAN + "NUMBER OF PEOPLE:", num)
-        print(Fore.CYAN + "FROM:", initial, "TO:", final)
+        print(Fore.CYAN + "FROM:", initial, "to", final)
 
-        if tg.lower() == "yes":
-            tgm = 8000
-        else:
-            tgm = 0
 
         print(Fore.CYAN + "HOTEL CHARGES:", hotmt)
         if mon == 0:
             print(Fore.CYAN + "TRANSPORTATION CHARGES: Will be according to tickets")
         else:
+            mon=mon*time
             print(Fore.CYAN + "TRANSPORTATION CHARGES:", mon)
-            total_sum = hotmt + mon + tgm
-            half1 = total_sum / 2
+            total_sum = hotmt + mon 
             print(Fore.WHITE + "")
             print("TOTAL MONEY:", total_sum)
-            print("PAID:", half1)
-            print("DUE:", half1)
             print(Fore.CYAN + "REFERENCE CODE NUMBER:", lst)
 
         print(Back.BLACK + "")

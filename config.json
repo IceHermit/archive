@@ -1,0 +1,9 @@
+{
+    "DATABASE_USER": "avnadmin",
+    "DATABASE_PASSWORD": "AVNS_SFYXQ2ulogJgPurHKl1",
+    "DATABASE_HOST": "coding-platform-ofdestinyh-317a.j.aivencloud.com",
+    "DATABASE_PORT": "10081",
+    "DATABASE_NAME": "defaultdb",
+    "SECRET_KEY": "abcde",
+    "DEBUG": true
+}
